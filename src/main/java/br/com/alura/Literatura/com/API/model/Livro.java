@@ -2,6 +2,9 @@ package br.com.alura.Literatura.com.API.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Entity
 public class Livro {
 
@@ -12,18 +15,21 @@ public class Livro {
     @Column(unique = true)
     private String titulo;
 
-    @ManyToOne
-    private Autor autor;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "livro_autor",
+            joinColumns = @JoinColumn(name = "livro_id"),
+            inverseJoinColumns = @JoinColumn(name = "autor_id")
+    )
+    private List<Autor> autor;
 
-    @Column(unique = true)
     private String Idioma;
-    private double numeroDownloads;
+    private Integer numeroDownloads;
 
     public Livro() {}
 
-    public Livro(String titulo, Autor autor, String idioma, double numeroDownloads) {
+    public Livro(String titulo, String idioma, Integer numeroDownloads) {
         this.titulo = titulo;
-        this.autor = autor;
         Idioma = idioma;
         this.numeroDownloads = numeroDownloads;
     }
@@ -44,11 +50,11 @@ public class Livro {
         this.titulo = titulo;
     }
 
-    public Autor getAutor() {
+    public List<Autor> getAutor() {
         return autor;
     }
 
-    public void setAutor(Autor autor) {
+    public void setAutor(List<Autor> autor) {
         this.autor = autor;
     }
 
@@ -64,12 +70,17 @@ public class Livro {
         return numeroDownloads;
     }
 
-    public void setNumeroDownloads(double numeroDownloads) {
+    public void setNumeroDownloads(Integer numeroDownloads) {
         this.numeroDownloads = numeroDownloads;
     }
 
     @Override
     public String toString() {
-        return "Título: " + titulo + " | Autor: " + autor + " | Idioma: " + Idioma + " | Numero de downloads: " + numeroDownloads;
+
+        String autores = autor.stream()
+                .map(Autor::getNome)
+                .collect(Collectors.joining(", "));
+
+        return "Título: " + titulo + " | Autor: " + autores + " | Idioma: " + Idioma + " | Numero de downloads: " + numeroDownloads;
     }
 }

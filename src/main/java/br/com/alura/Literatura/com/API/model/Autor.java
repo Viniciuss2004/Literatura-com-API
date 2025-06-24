@@ -16,17 +16,16 @@ public class Autor {
     private int anoNascimento;
     private int anoFalecimento;
 
-    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "autor")
     private List<Livro> livros;
 
     public Autor() {
     }
 
-    public Autor(String nome, int anoNascimento, int anoFalecimento, List<Livro> livros) {
+    public Autor(String nome, int anoNascimento, int anoFalecimento) {
         this.nome = nome;
         this.anoNascimento = anoNascimento;
         this.anoFalecimento = anoFalecimento;
-        this.livros = livros;
     }
 
     public Long getId() {
@@ -71,6 +70,6 @@ public class Autor {
 
     @Override
     public String toString() {
-        return "Autor: " + nome + " | Ano Nascimento: " + anoNascimento + " | Ano Falecimento: " + anoFalecimento + " | Livros: " + livros;
+        return "Autor: " + nome + " | Ano Nascimento: " + anoNascimento + " | Ano Falecimento: " + anoFalecimento;
     }
 }
